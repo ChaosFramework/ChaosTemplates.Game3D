@@ -9,4 +9,4 @@ cd "$SolutionDir"
 
 SolutionDir="$SolutionDir" bash -c 'dotnet build "./submodules/ChaosBuild.CodeFormatter.Tasks/"'
 SolutionDir="$SolutionDir" bash -c 'dotnet build "./submodules/ChaosFrameworkBuild.ArchiveCreator/"'
-SolutionDir="$SolutionDir" bash -c 'dotnet build "./ChaosTemplates.Game3D.sln"'
+SolutionDir="$SolutionDir" bash -c 'dotnet build "./ChaosTemplates.Game3D.sln" --configuration='"${1:-Release}"
