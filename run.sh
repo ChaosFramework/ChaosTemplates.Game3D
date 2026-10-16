@@ -8,6 +8,9 @@ SolutionDir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")/"
 cd "$SolutionDir"
 
 tf="net8.0"
+case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
+  mingw*|msys*|cygwin*|windows*) tf="net8.0-windows" ;;
+esac
 
 bash ./build.sh
 SolutionDir="$SolutionDir" bash -c '       \
