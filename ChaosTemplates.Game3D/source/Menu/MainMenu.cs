@@ -19,7 +19,8 @@ namespace ChaosTemplates.Game3D.Menu
 
         void Play(Control _)
         {
-            System.Console.WriteLine("Game Start");
+            Dispose();
+            game.scenes.Add(new World.TemplateWorld(g));
         }
 
         void Settings(Control _)

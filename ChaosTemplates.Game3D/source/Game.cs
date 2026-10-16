@@ -169,7 +169,7 @@ namespace ChaosTemplates.Game3D
 
         protected override void Draw()
         {
-            GL.ClearColor(0, ChaosUtil.Primitives.Random.instance.RndByte(), 0, 0xFF);
+            GL.ClearColor(0.0f, ChaosUtil.Primitives.Random.instance.Rnd(), 0.0f, 1.0f);
             Graphics.ThrowErrors();
             GL.Clear(ClearBufferMask.ColorBufferBit);
             Graphics.ThrowErrors();
