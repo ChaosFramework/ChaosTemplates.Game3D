@@ -23,8 +23,8 @@ namespace ChaosTemplates.Game3D
             Environment.CurrentDirectory = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
 #if OS_WINDOWS
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 #endif
 
             AssemblyManager.RegisterAssemblies(
