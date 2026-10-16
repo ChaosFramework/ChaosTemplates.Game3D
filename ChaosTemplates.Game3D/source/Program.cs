@@ -1,5 +1,12 @@
 using System;
 using System.Reflection;
+using ChaosFramework.Graphics.OpenGl;
+using ChaosFramework.Graphics.Text;
+using ChaosFramework.Input;
+using ChaosFramework.IO;
+using ChaosFramework.Platform;
+using ChaosFramework.Platform.Glfw;
+using ChaosUtil.Reflection;
 using BindingFlags = System.Reflection.BindingFlags;
 
 namespace ChaosTemplates.Game3D
@@ -20,8 +27,38 @@ namespace ChaosTemplates.Game3D
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 #endif
 
-            // TODO: start a game
-            Console.WriteLine("Game Start");
+            AssemblyManager.RegisterAssemblies(
+                typeof(Program).Assembly,
+                typeof(ChaosFramework.Menu.OpenGl.Control).Assembly,
+                typeof(GlStateTracker.RenderStateChange).Assembly,
+                typeof(ChaosFramework.Sound.Markers.CuePoint).Assembly  // TODO: Only register subtypes of CuePoint
+                );
+
+            ChaosIO.Init(
+                typeof(Program).Assembly,
+                typeof(ChaosFramework.Math.Matrix).Assembly,
+                typeof(GlyphDimensions).Assembly,
+                typeof(Graphics).Assembly
+                );
+
+            Confix.Load();
+
+            string title = "ChaosTemplates.Game3D";
+
+            GlfwPlatformContext platformContext = new();
+            PresentationContext window = platformContext.CreateFullscreen(title, platformContext.PrimaryMonitor);
+            Func<InputContext, InputDeviceHost> createHost = context => new ChaosFramework.Input.OpenTk.DeviceHost(context, ((GlfwFullscreen)window).window);
+
+            window.SetIcon(
+                new ApplicationIcon(
+                    ApplicationIcon.IconFormat.ico,
+                    () => Properties.Resources.ResourceManager.GetStream(nameof(Properties.Resources.icon)))
+                    );
+
+            Confix.Save();
+
+            Game g = new(platformContext, window, createHost);
+            g.Run();
         }
     }
 }

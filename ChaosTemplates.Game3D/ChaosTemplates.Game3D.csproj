@@ -6,6 +6,7 @@
     <AssemblyName>ChaosTemplates.Game3D</AssemblyName>
     <RootNamespace>ChaosTemplates.Game3D</RootNamespace>
     <ProjectGuid>{45B8E263-CDD9-49BD-AAE4-2753F925B629}</ProjectGuid>
+    <ApplicationIcon>Resources/icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!-- Properties -->
@@ -13,6 +14,7 @@
   <Import Project="$(SolutionDir)submodules/ChaosPresets.Targets/Properties/OutputType/Executable.targets" />
 
   <!-- Included Files -->
+  <Import Project="$(SolutionDir)submodules/ChaosPresets.Targets/StandardResources.targets" />
   <ItemGroup>
     <Compile Include="source/**/*.cs" />
   </ItemGroup>
@@ -50,5 +52,22 @@
 
   <!-- Build Tasks -->
   <Import Project="$(SolutionDir)submodules/ChaosPresets.References/BuildTasks/ChaosBuild.CodeFormatter.Tasks.ChangedProjectFiles.targets" />
+
+  <UsingTask
+    TaskName="ChaosArchive"
+    AssemblyFile="$(SolutionDir)submodules/ChaosFrameworkBuild.ArchiveCreator/build/bin/AnyCPU/Debug/netstandard2.0/ChaosFrameworkBuild.ArchiveCreator.dll"
+    /> <!-- TODO: do something about this hardcoded path -->
+
+  <Target
+    Name="CreateArchive"
+    BeforeTargets="BeforeBuild"
+    >
+    <ChaosArchive
+      SourceFolder="assets"
+      TargetFile="assets.cha"
+      OutputPath="$(OutputPath)"
+      IntermediateOutputPath="$(IntermediateOutputPath)"
+      />
+  </Target>
 
 </Project>
