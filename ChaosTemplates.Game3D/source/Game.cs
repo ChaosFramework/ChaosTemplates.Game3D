@@ -96,7 +96,7 @@ namespace ChaosTemplates.Game3D
                     archive = new ChaosArchive(new System.IO.FileInfo("assets.cha"), false);
                     audio = new Audio();
                     music = new Music(audio, archive.OpenRead("music/music.ogg"), true);
-                    music.Play(Confix.instance.musicVolume);
+                    music.Play(Confix.instance.musicVolume * Confix.instance.masterVolume);
                 }),
                 Task.Run(() => graphics = new Graphics(dispatcher, platformContext.glContext, 3, 3, RenderLoadingScreen)),
                 Task.Run(input.Init)
@@ -140,7 +140,7 @@ namespace ChaosTemplates.Game3D
         protected override void Update()
         {
             float ftime = time.time.frameTime;
-            float vol = Confix.instance.musicVolume;
+            float vol = Confix.instance.musicVolume * Confix.instance.masterVolume;
             if (vol != music.volume)
                 music.volume = vol;
 
