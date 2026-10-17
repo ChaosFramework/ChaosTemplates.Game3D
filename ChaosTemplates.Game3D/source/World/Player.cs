@@ -4,6 +4,7 @@ using ChaosFramework.Graphics.OpenGl.Instancing;
 using ChaosFramework.Math.Vectors;
 using ChaosFramework.Physics;
 using ChaosFramework.Shapes.Convex;
+using ChaosTemplates.Game3D.World.Transparents;
 using static ChaosFramework.Math.Constants;
 
 namespace ChaosTemplates.Game3D.World
@@ -14,6 +15,7 @@ namespace ChaosTemplates.Game3D.World
         static readonly Vector3f VIEW_OFFSET = new Vector3f(3.5f, -2, 3.5f);
 
         Physical physics;
+        ParticleFire.Spawner particleFire;
 
         protected override void Create(CreateParameters cparams)
         {
@@ -29,6 +31,12 @@ namespace ChaosTemplates.Game3D.World
             physics.state.velocity.z = -2.5f;
 
             scene.instancers.GetOrCreateManager(typeof(Player)).instancedThings.Add(this);
+            particleFire = AddComponent<ParticleFire.Spawner>();
+            particleFire.particleSize = 0.666f;
+            particleFire.particleLifeTime = 3.0f;
+            particleFire.spawnInterval = 0.01f;
+            particleFire.spawnShape = physics.shapes[0];
+            particleFire.spawnOnShapeOnly = true;
         }
 
         public override void SetUpdateCalls()
@@ -36,10 +44,18 @@ namespace ChaosTemplates.Game3D.World
             base.SetUpdateCalls();
             scene.updateLayers[(int)UpdateLayers.SetCamera].Add(UpdateCamera);
             scene.updateLayers[(int)UpdateLayers.Move].Add(Move);
+            scene.updateLayers[(int)UpdateLayers.PostCollision].Add(SetFirePosition);
         }
 
         void Move()
             => physics.state.Move(ftime);
+
+        void SetFirePosition()
+        {
+
+            particleFire.velocity = physics.state.velocity;
+            particleFire.position = physics.state.position;
+        }
 
         void UpdateCamera()
         {
