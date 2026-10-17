@@ -1,21 +1,30 @@
 using ChaosFramework.Components;
 using ChaosFramework.Core;
 using ChaosFramework.Graphics.OpenGl.Instancing;
+using ChaosFramework.Input;
+using ChaosFramework.Input.InputEvents;
 using ChaosFramework.Math.Vectors;
 using ChaosFramework.Physics;
 using ChaosFramework.Shapes.Convex;
 using ChaosTemplates.Game3D.World.Transparents;
 using static ChaosFramework.Math.Constants;
+using static ChaosFramework.Math.Trigonometry;
+using static ChaosFramework.Math.Exponentials;
 
 namespace ChaosTemplates.Game3D.World
 {
     [DefaultInstancer(1, "models/cube.gmdl", null)]
     public class Player : Component<WorldScene>, Instancable
     {
-        static readonly Vector3f VIEW_OFFSET = new Vector3f(3.5f, -2, 3.5f);
+        const float VIEW_DISTANCE = 5.0f;
+        const float VIEW_HEIGHT = 2.8f;
+        const float VIEW_ANGLE_SENSITIVITY = 0.005f;
+        const float MOVEMENT_CONTROL = 30f;
+        const float MOVEMENT_SPEED = 6.66f;
 
         Physical physics;
         ParticleFire.Spawner particleFire;
+        float viewAngle = 0;
 
         protected override void Create(CreateParameters cparams)
         {
@@ -45,10 +54,41 @@ namespace ChaosTemplates.Game3D.World
             scene.updateLayers[(int)UpdateLayers.SetCamera].Add(UpdateCamera);
             scene.updateLayers[(int)UpdateLayers.Move].Add(Move);
             scene.updateLayers[(int)UpdateLayers.PostCollision].Add(SetFirePosition);
+            scene.game.input.AddMouseMoveHandler(InputLayer.Game, PivotCamera);
+        }
+
+        bool PivotCamera(InputChangeEvent<Mouse.Position> changeEvent)
+        {
+            if (changeEvent.axis.direction == Mouse.Direction.X)
+            {
+                viewAngle += (changeEvent.data.newValue - changeEvent.data.oldValue) * VIEW_ANGLE_SENSITIVITY;
+                return true;
+            }
+            return false;
         }
 
         void Move()
-            => physics.state.Move(ftime);
+        {
+            float side = 0, forward = 0;
+            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.A))
+                side -= 1.0f;
+            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.D))
+                side += 1.0f;
+            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.S))
+                forward -= 1.0f;
+            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.W))
+                forward += 1.0f;
+
+            Vector2f movement = new Vector2f(side, forward).GetNormalized();
+            Vector3f target = (
+                scene.view.GetLocalX() * movement.x
+                + scene.view.GetLocalZ().x0z.GetNormalized() * movement.y
+                ) * MOVEMENT_SPEED;
+            Vector2f delta = (target.xz - physics.state.velocity.xz) * EaseIn(ftime * MOVEMENT_CONTROL);
+            physics.state.velocity.x += delta.x;
+            physics.state.velocity.z += delta.y;
+            physics.state.Move(ftime);
+        }
 
         void SetFirePosition()
         {
@@ -58,9 +98,12 @@ namespace ChaosTemplates.Game3D.World
 
         void UpdateCamera()
         {
+            float sin = Sin(viewAngle);
+            float cos = Cos(viewAngle);
+            Vector3f viewOffset = new(cos * VIEW_DISTANCE, -VIEW_HEIGHT, sin * VIEW_DISTANCE);
             scene.view.Update(
-                physics.state.position - VIEW_OFFSET,
-                VIEW_OFFSET,
+                physics.state.position - viewOffset,
+                viewOffset,
                 new Vector3f(0, 1, 0),
                 scene.view.nearClip,
                 scene.view.farClip,
