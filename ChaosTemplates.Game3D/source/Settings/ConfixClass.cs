@@ -4,6 +4,10 @@ namespace ChaosTemplates.Game3D.Settings
 {
     public class ConfixClass
     {
+        [Gui(Cat.GENERAL, null, 30u, 666u)]
+        [Ini.Field(Cat.GENERAL, "The maximum framerate for the game.")]
+        public uint frameRate = 60u;
+
         [Gui(Cat.GENERAL, null, 0, 1, 2)]
         [Ini.Field(Cat.GENERAL, "The brightness of the default light that illuminates your game. 0 is off, 1 is full")]
         public float brightness = 1f;

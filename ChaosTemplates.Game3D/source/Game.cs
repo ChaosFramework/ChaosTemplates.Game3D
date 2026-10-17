@@ -57,6 +57,7 @@ namespace ChaosTemplates.Game3D
             this.window = window;
             this.platformContext = platformContext;
             this.input = new Input(createInputContext);
+            gameLoop = new ChaosFramework.Components.GameLoop.CappedVariableTimeLoop(platformContext.messageQueue, Confix.instance.frameRate);
             platformContext.Terminate += Terminate;
         }
 
