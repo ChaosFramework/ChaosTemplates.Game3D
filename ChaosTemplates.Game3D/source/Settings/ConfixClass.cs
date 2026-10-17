@@ -43,5 +43,9 @@ namespace ChaosTemplates.Game3D.Settings
         [Gui(Cat.SOUND, null)]
         [Ini.Field(Cat.SOUND, "Determines whether the music is muted.")]
         public bool musicMuted = false;
+
+        [Gui(Cat.INPUT, null, 0.001f, 10.0f, 3)]
+        [Ini.Field(Cat.INPUT, "A mouse senstivity multiplier for camera movement.")]
+        public float mouseSensitivity = 1.0f;
     }
 }

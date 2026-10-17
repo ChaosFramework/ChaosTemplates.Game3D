@@ -39,10 +39,10 @@ namespace ChaosTemplates.Game3D
             => context.EnumerateDevices<Mouse>().Any(mouse => mouse.buttons[(int)button].down);
 
         public float MouseX()
-            => context.EnumerateDevices<Mouse>().Sum(mouse => mouse.x.value);
+            => context.EnumerateDevices<Mouse>().Sum(mouse => mouse.x.value) * Confix.instance.mouseSensitivity;
 
         public float MouseY()
-            => context.EnumerateDevices<Mouse>().Sum(mouse => mouse.y.value);
+            => context.EnumerateDevices<Mouse>().Sum(mouse => mouse.y.value) * Confix.instance.mouseSensitivity;
 
         public float Scroll()
             => context.EnumerateDevices<Mouse>().Sum(mouse => mouse.scroll.value);

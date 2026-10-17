@@ -61,7 +61,9 @@ namespace ChaosTemplates.Game3D.World
         {
             if (changeEvent.axis.direction == Mouse.Direction.X)
             {
-                viewAngle += (changeEvent.data.newValue - changeEvent.data.oldValue) * VIEW_ANGLE_SENSITIVITY;
+                viewAngle += (changeEvent.data.newValue - changeEvent.data.oldValue)
+                           * VIEW_ANGLE_SENSITIVITY
+                           * Confix.instance.mouseSensitivity;
                 return true;
             }
             return false;
