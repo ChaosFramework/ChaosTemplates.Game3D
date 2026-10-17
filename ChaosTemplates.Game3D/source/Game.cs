@@ -49,14 +49,14 @@ namespace ChaosTemplates.Game3D
 
         public readonly PresentationContext window;
         public readonly PlatformContext platformContext;
-        public readonly Input input;
+        public readonly Input.Input input;
 
         public Game(PlatformContext platformContext, PresentationContext window, Func<InputContext, InputDeviceHost> createInputContext)
             : base(platformContext.messageQueue)
         {
             this.window = window;
             this.platformContext = platformContext;
-            this.input = new Input(createInputContext);
+            this.input = new Input.Input(createInputContext);
             gameLoop = new ChaosFramework.Components.GameLoop.CappedVariableTimeLoop(platformContext.messageQueue, Confix.instance.frameRate);
             platformContext.Terminate += Terminate;
         }

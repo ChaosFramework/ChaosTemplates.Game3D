@@ -3,6 +3,7 @@ using ChaosFramework.Graphics.OpenGl.Lights;
 using ChaosFramework.Input;
 using ChaosFramework.Input.InputEvents;
 using ChaosFramework.Math.Vectors;
+using ChaosTemplates.Game3D.Input;
 
 namespace ChaosTemplates.Game3D.World
 {
@@ -40,7 +41,7 @@ namespace ChaosTemplates.Game3D.World
 
         bool Pause(InputPushEvent<Keyboard.Key> e)
         {
-            if (e.axis.hidKey == Keyboard.HidUsage.Escape)
+            if (game.input.bindings.IsMatch(Inputs.Pause, e.axis))
             {
                 pause.ShowDialog(null, null);
                 return true;

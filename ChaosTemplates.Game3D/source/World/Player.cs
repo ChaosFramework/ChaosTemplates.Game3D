@@ -72,13 +72,13 @@ namespace ChaosTemplates.Game3D.World
         void Move()
         {
             float side = 0, forward = 0;
-            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.A))
+            if (scene.game.input.IsPressed(Input.Inputs.WalkLeft))
                 side -= 1.0f;
-            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.D))
+            if (scene.game.input.IsPressed(Input.Inputs.WalkRight))
                 side += 1.0f;
-            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.S))
+            if (scene.game.input.IsPressed(Input.Inputs.WalkBack))
                 forward -= 1.0f;
-            if (scene.game.input.IsKeyDown(Keyboard.HidUsage.W))
+            if (scene.game.input.IsPressed(Input.Inputs.WalkForward))
                 forward += 1.0f;
 
             Vector2f movement = new Vector2f(side, forward).GetNormalized();

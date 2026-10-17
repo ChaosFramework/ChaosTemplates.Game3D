@@ -3,6 +3,7 @@ using ChaosFramework.Input;
 using ChaosFramework.Input.InputEvents;
 using ChaosFramework.IO.Containers;
 using ChaosFramework.Menu.OpenGl;
+using ChaosTemplates.Game3D.Input;
 using SysCol = System.Collections.Generic;
 
 namespace ChaosTemplates.Game3D.Menu
@@ -49,7 +50,7 @@ namespace ChaosTemplates.Game3D.Menu
 
         bool Input(InputPushEvent<Keyboard.Key> e)
         {
-            if (e.axis.hidKey == Keyboard.HidUsage.Escape)
+            if (((Game)game).input.bindings.IsMatch(Inputs.Pause, e.axis))
                 return closeRequested = true;
 
             return false;

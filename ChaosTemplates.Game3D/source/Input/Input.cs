@@ -3,40 +3,50 @@ using System.Linq;
 using ChaosFramework.Components;
 using ChaosFramework.Core;
 using ChaosFramework.Input;
+using ChaosFramework.Input.Axis;
 using ChaosFramework.Input.InputEvents;
 
-namespace ChaosTemplates.Game3D
+namespace ChaosTemplates.Game3D.Input
 {
-    public class Input(Func<InputContext, InputDeviceHost> createInputContext)
+    public class Input
         : Disposable
     {
         const float UPDATE_INPUT_DEVICE_INTERVAL = 3.2f;
         public InputContext context { get; private set; }
 
-        readonly Func<InputContext, InputDeviceHost> createInputContext = createInputContext;
+        public readonly InputBindings bindings;
+
+        readonly Func<InputContext, InputDeviceHost> createInputContext;
         float updateInputDeviceTimer;
+
+        public Input(Func<InputContext, InputDeviceHost> createInputContext)
+        {
+            this.createInputContext = createInputContext;
+            bindings = new InputBindings(this);
+        }
 
         public void Init()
         {
             context = new InputContext(typeof(InputLayer), createInputContext);
+            UpdateDevices();
+        }
+
+        void UpdateDevices()
+        {
             context.UpdateDeviceList();
+            updateInputDeviceTimer = UPDATE_INPUT_DEVICE_INTERVAL;
+            bindings.UpdateInputBindings();
         }
 
         public void UpdateDeviceRefresh(Time ftime)
         {
             updateInputDeviceTimer -= ftime;
             if (updateInputDeviceTimer < 0)
-            {
-                context.UpdateDeviceList();
-                updateInputDeviceTimer = UPDATE_INPUT_DEVICE_INTERVAL;
-            }
+                UpdateDevices();
         }
 
-        public bool IsKeyDown(Keyboard.HidUsage hidUsage)
-            => context.EnumerateDevices<Keyboard>().Any(keyboard => keyboard[hidUsage].down);
-
-        public bool IsMouseDown(Mouse.ButtonSemantic button)
-            => context.EnumerateDevices<Mouse>().Any(mouse => mouse.buttons[(int)button].down);
+        public bool IsPressed(Inputs input)
+            => bindings.GetBindings(input).OfType<ButtonAxis>().Any(axis => axis.down);
 
         public float MouseX()
             => context.EnumerateDevices<Mouse>().Sum(mouse => mouse.x.value) * Confix.instance.mouseSensitivity;
