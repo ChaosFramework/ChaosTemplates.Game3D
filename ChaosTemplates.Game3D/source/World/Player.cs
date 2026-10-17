@@ -52,7 +52,6 @@ namespace ChaosTemplates.Game3D.World
 
         void SetFirePosition()
         {
-
             particleFire.velocity = physics.state.velocity;
             particleFire.position = physics.state.position;
         }

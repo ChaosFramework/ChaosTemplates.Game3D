@@ -44,7 +44,6 @@ namespace ChaosTemplates.Game3D.Menu
             this.layoutFile = layoutFile;
             this.layoutPath = layoutPath;
             g = (Game)game;
-            g.input.UpdateDeviceList();
 
             foreach (ButtonHandler btn in MakeButtons())
                 buttons.Add(new Entry(btn));
@@ -78,7 +77,7 @@ namespace ChaosTemplates.Game3D.Menu
         {
             base.SetUpdateCalls();
 
-            ((Game)game).input.AddHandler<InputPushEvent<Mouse.Button>, Mouse.Button, InputChange>(InputLayer.Menu, e =>
+            ((Game)game).input.context.AddHandler<InputPushEvent<Mouse.Button>, Mouse.Button, InputChange>(InputLayer.Menu, e =>
             {
                 foreach (Entry btn in buttons)
                     if (btn.inputs.Contains(e.axis))

@@ -22,13 +22,11 @@ namespace ChaosTemplates.Game3D
     public class Game : BaseGame
     {
         public const string SPRITE = "$Sprite";
-        const float UPDATE_INPUT_DEVICE_INTERVAL = 3.2f;
 
         public ChaosArchive archive { get; private set; }
 
         public Graphics graphics { get; private set; }
         public Audio audio { get; private set; }
-        public InputContext input { get; private set; }
         public Music music { get; private set; }
 
         public TextureContainer textures { get; private set; }
@@ -51,16 +49,14 @@ namespace ChaosTemplates.Game3D
 
         public readonly PresentationContext window;
         public readonly PlatformContext platformContext;
-
-        readonly Func<InputContext, InputDeviceHost> createInputContext;
-        float updateInputDeviceTimer;
+        public readonly Input input;
 
         public Game(PlatformContext platformContext, PresentationContext window, Func<InputContext, InputDeviceHost> createInputContext)
             : base(platformContext.messageQueue)
         {
             this.window = window;
             this.platformContext = platformContext;
-            this.createInputContext = createInputContext;
+            this.input = new Input(createInputContext);
             platformContext.Terminate += Terminate;
         }
 
@@ -102,12 +98,8 @@ namespace ChaosTemplates.Game3D
                     music.Play(Confix.instance.musicVolume);
                 }),
                 Task.Run(() => graphics = new Graphics(dispatcher, platformContext.glContext, 3, 3, RenderLoadingScreen)),
-                Task.Run(() =>
-                    {
-                        input = new InputContext(typeof(InputLayer), createInputContext);
-                        input.UpdateDeviceList();
-                    }
-                ));
+                Task.Run(input.Init)
+                );
 
             const bool monitoring = false;
             async Task LoadShaders()
@@ -139,7 +131,7 @@ namespace ChaosTemplates.Game3D
             textRenderer = TextRenderer.Create(graphics, 1000, 10000, 1000, false, defaultFont);
             textBuffer = textRenderer.CreateRenderContext();
             TextureProvider texProvider = new(graphics, textures);
-            menuContext = new MenuContext(this, graphics, window, input, InputLayer.Menu, language, defaultFont, texProvider);
+            menuContext = new MenuContext(this, graphics, window, input.context, InputLayer.Menu, language, defaultFont, texProvider);
 
             scenes.Add(new Menu.MainMenu(menuContext));
         }
@@ -154,15 +146,9 @@ namespace ChaosTemplates.Game3D
             Dispatcher.dispatcher.ExecuteDispatchers(10);
             soundPool.Update();
 
-            updateInputDeviceTimer -= ftime;
-            if (updateInputDeviceTimer < 0)
-            {
-                input.UpdateDeviceList();
-                updateInputDeviceTimer = UPDATE_INPUT_DEVICE_INTERVAL;
-            }
-
+            input.UpdateDeviceRefresh(time.time);
             menuContext.Update(time.time);
-            input.UpdateInputConsumption();
+            input.context.UpdateInputConsumption();
 
             base.Update();
         }
