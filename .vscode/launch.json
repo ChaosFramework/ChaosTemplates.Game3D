@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug pre-built C# project",
+      "type": "coreclr",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "args": [],
+      "stopAtEntry": false,
+      "windows": {
+        "program": "${workspaceFolder}/ChaosTemplates.Game3D/build/bin/AnyCPU/Debug/net8.0-windows/ChaosTemplates.Game3D.dll",
+      },
+      "linux": {
+        "program": "${workspaceFolder}/ChaosTemplates.Game3D/build/bin/AnyCPU/Debug/net8.0/ChaosTemplates.Game3D.dll",
+      }
+    }
+  ]
+}
