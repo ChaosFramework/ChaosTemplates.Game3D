@@ -20,6 +20,7 @@ namespace ChaosTemplates.Game3D.World
             lights.Add(sun);
 
             AddComponent<World>();
+            AddComponent<Skybox>();
         }
     }
 }

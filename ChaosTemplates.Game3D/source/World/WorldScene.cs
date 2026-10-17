@@ -162,7 +162,7 @@ namespace ChaosTemplates.Game3D.World
                 game.graphics.stateTracker.BindFramebuffer(FramebufferTarget.Framebuffer, oeld);
             });
 
-            drawLayers[(int)DrawLayers.BeginWorld].Add(() => deferredShader.BeginWorld());
+            drawLayers[(int)DrawLayers.BeginWorld].Add(BeginWorld);
             drawLayers[(int)DrawLayers.BeginMaterial].Add(deferredShader.BeginMaterial);
 
             instancers.SetDrawCalls(drawLayers[(int)DrawLayers.ResetInstancers], drawLayers[(int)DrawLayers.FillInstancers]);
@@ -183,6 +183,13 @@ namespace ChaosTemplates.Game3D.World
                 drawLayers[i].Add(() => Graphics.ThrowErrors());
             Graphics.ThrowErrors();
 #endif
+        }
+
+        void BeginWorld()
+        {
+            deferredShader.BeginWorld();
+            GL.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
         public void ApplyAntiAliasing(Framebuffer target)

@@ -9,6 +9,7 @@ namespace ChaosTemplates.Game3D
         World,
         BeginMaterial,
         Material,
+        Sky,
         RenderDeferredShader,
         Transparents,
         AntiAliasing,
