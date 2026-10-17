@@ -1,5 +1,7 @@
 using ChaosFramework.Graphics.Colors;
 using ChaosFramework.Graphics.OpenGl.Lights;
+using ChaosFramework.Input;
+using ChaosFramework.Input.InputEvents;
 using ChaosFramework.Math.Vectors;
 
 namespace ChaosTemplates.Game3D.World
@@ -7,6 +9,8 @@ namespace ChaosTemplates.Game3D.World
     public class TemplateWorld : WorldScene
     {
         public readonly DirectionalLight sun;
+
+        readonly Menu.PauseMenu pause;
 
         public TemplateWorld(Game game)
             : base (game)
@@ -21,6 +25,30 @@ namespace ChaosTemplates.Game3D.World
 
             AddComponent<World>();
             AddComponent<Skybox>();
+
+            pause = new Menu.PauseMenu(this)
+            {
+                disposeOnSuicide = false
+            };
+        }
+
+        public override void SetUpdateCalls()
+        {
+            base.SetUpdateCalls();
+            game.input.AddKeyDownHandler(InputLayer.Game, Pause);
+        }
+
+        bool Pause(InputPushEvent<Keyboard.Key> e)
+        {
+            if (e.axis.hidKey == Keyboard.HidUsage.Escape)
+            {
+                pause.ShowDialog(null, null);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
