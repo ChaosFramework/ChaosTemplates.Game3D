@@ -1,4 +1,3 @@
-using System.Drawing.Drawing2D;
 using ChaosFramework.Components;
 using ChaosFramework.Core;
 using ChaosFramework.Graphics.OpenGl.Instancing;
@@ -12,7 +11,7 @@ namespace ChaosTemplates.Game3D.World
     [DefaultInstancer(1, "models/cube.gmdl", null)]
     public class Player : Component<WorldScene>, Instancable
     {
-        static readonly Vector3f VIEW_OFFSET = new Vector3f(0.5f, -2, 1);
+        static readonly Vector3f VIEW_OFFSET = new Vector3f(3.5f, -2, 3.5f);
 
         Physical physics;
 

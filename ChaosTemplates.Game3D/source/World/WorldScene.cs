@@ -30,6 +30,8 @@ namespace ChaosTemplates.Game3D.World
         public readonly LightInstancerBase[] lightInstancers;
 
         public TransparencyRenderer transparency;
+        public Transparents.ParticleFire fire;
+
         public readonly InstancingManagerContainer<WorldScene> instancers;
         public readonly ChaosFramework.Graphics.OpenGl.PostProcessors.AntiAliasing antiAliasing = new();
 
@@ -73,6 +75,7 @@ namespace ChaosTemplates.Game3D.World
                 deferredShader.depthBuffer,
                 (int)Confix.instance.numTransparencyLayers);
             transparency.solidDepthBias = 0.000025f;
+            transparency.transparents.Add(fire = AddComponent<Transparents.ParticleFire>());
 
             antiAliasing = new ChaosFramework.Graphics.OpenGl.PostProcessors.AntiAliasing();
             antiAliasing.normalFactor = 6f;
